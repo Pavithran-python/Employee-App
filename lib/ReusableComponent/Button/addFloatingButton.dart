@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 
 Widget addFloatingButton({required double screenWidth,required Function(bool) getActionClick}){
   return SizedBox(
-    width: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().addEmployeeIconBackgroundWidth),
-    height: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().addEmployeeIconBackgroundWidth),
+    width: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().addEmployeeIconBackgroundWidth)>50?50:ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().addEmployeeIconBackgroundWidth),
+    height: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().addEmployeeIconBackgroundWidth)>50?50:ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().addEmployeeIconBackgroundWidth),
     child: FittedBox(
       child: FloatingActionButton(
         onPressed: (){
@@ -19,7 +19,7 @@ Widget addFloatingButton({required double screenWidth,required Function(bool) ge
         splashColor: Colors.white,
         backgroundColor: ColorConfig().addEmployeeIconBackgroundColor,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().addEmployeeIconBackgroundCornerRadius)),
+          borderRadius: BorderRadius.circular(ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().addEmployeeIconBackgroundCornerRadius)>10?10:ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().addEmployeeIconBackgroundCornerRadius)),
         ),
         child: svgImage(imagePath: AppConfig().addEmployeeIcon, getBoxFit: BoxFit.scaleDown, svgImageWidth: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().addEmployeeIconWidth), svgImageHeight: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().addEmployeeIconWidth)),
       ),

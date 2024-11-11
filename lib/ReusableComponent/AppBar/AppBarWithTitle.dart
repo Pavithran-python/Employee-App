@@ -11,7 +11,7 @@ import 'package:flutter/services.dart';
 
 AppBar AppBarWithTitle({required double screenWidth,required double screenHeight,required String title,required bool updateEmployee,required Function(bool) getCallBackDeleteIconClick}){
   return AppBar(
-    toolbarHeight: ValueConfig().getVerticalValueUsingHeight(screenHeight: screenHeight, getHeight: SizeConfig().appBarHeight),
+    toolbarHeight: ValueConfig().getVerticalValueUsingHeight(screenHeight: screenHeight, getHeight: SizeConfig().appBarHeight+(screenWidth<screenHeight?0:SizeConfig().appBarHeight*0.25)),
     systemOverlayStyle: SystemUiOverlayStyle(
       statusBarColor: ColorConfig().statusBarColor,
       statusBarBrightness: Brightness.light,
@@ -21,7 +21,7 @@ AppBar AppBarWithTitle({required double screenWidth,required double screenHeight
     backgroundColor: ColorConfig().appBarBackgroundColor,
     titleSpacing: 0,
     title: Padding(
-      padding: EdgeInsets.symmetric(horizontal: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().appBarHorizontalPadding)),
+      padding: EdgeInsets.symmetric(horizontal: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().employeeSectionHorizontalPadding)>20?20: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().employeeSectionHorizontalPadding)),
       child: Container(
         width: screenWidth,
         alignment: Alignment.centerLeft,
@@ -30,7 +30,7 @@ AppBar AppBarWithTitle({required double screenWidth,required double screenHeight
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
-              child:textWidget(getText: title, screenHeight: screenHeight, textSize: SizeConfig().appBarTextSize, textColor: ColorConfig().appBarTitleTextColor, getAlign: TextAlign.start, textStyle:AppConfig().robotoFontMedium, softWrap:false),
+              child:textWidget(getText: title, screenHeight: screenHeight, textSize: SizeConfig().appBarTextSize+(screenWidth<screenHeight?0:SizeConfig().appBarHeight*0.25), textColor: ColorConfig().appBarTitleTextColor, getAlign: TextAlign.start, textStyle:AppConfig().robotoFontMedium, softWrap:false),
             ),
             updateEmployee?TextButton(
               onPressed: (){
@@ -42,7 +42,7 @@ AppBar AppBarWithTitle({required double screenWidth,required double screenHeight
                 padding: EdgeInsets.zero,
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
-              child: svgImage(imagePath: AppConfig().deleteEmployeeIcon, getBoxFit: BoxFit.scaleDown, svgImageWidth: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().deleteEmployeeIconWidth), svgImageHeight:ValueConfig().getVerticalValueUsingHeight(screenHeight: screenHeight, getHeight: SizeConfig().deleteEmployeeIconHeight)),
+              child: svgImage(imagePath: AppConfig().deleteEmployeeIcon, getBoxFit: BoxFit.fitHeight, svgImageWidth: ValueConfig().getVerticalValueUsingHeight(screenHeight: screenHeight, getHeight: (SizeConfig().deleteEmployeeIconWidth+(screenWidth<screenHeight?0:SizeConfig().deleteEmployeeIconWidth*0.5))), svgImageHeight:ValueConfig().getVerticalValueUsingHeight(screenHeight: screenHeight, getHeight: (SizeConfig().deleteEmployeeIconWidth+(screenWidth<screenHeight?0:SizeConfig().deleteEmployeeIconWidth*0.5)))),
             ):SizedBox(),
           ],
         ),

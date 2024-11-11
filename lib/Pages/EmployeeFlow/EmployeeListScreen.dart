@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:employee/Config/AppConfig.dart';
 import 'package:employee/Config/ColorConfig.dart';
 import 'package:employee/Config/TextConfig.dart';
@@ -13,6 +15,7 @@ import 'package:employee/Pages/EmployeeFlow/widgets/successMessageBox.dart';
 import 'package:employee/ReusableComponent/AppBar/AppBarWithTitle.dart';
 import 'package:employee/ReusableComponent/Button/addFloatingButton.dart';
 import 'package:employee/ReusableComponent/WidgetUI/messageBoxWidget.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -31,6 +34,7 @@ class EmployeeListPage extends State<EmployeeListScreen> {
   double statusBarHeight = 0;
   bool isLoading = true;
   var dbHelper = ClientDatabase.instance;
+  FlutterView view = WidgetsBinding.instance.platformDispatcher.views.first;
 
   getAllEmployee(){
     context.read<EmployeeListBloc>().add(LoadEmployeeList(loader: false));
@@ -73,16 +77,32 @@ class EmployeeListPage extends State<EmployeeListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    screenWidth = MediaQuery.of(context).size.width;
-    screenHeight = MediaQuery.of(context).size.height;
+    if(kIsWeb){
+      Size size = MediaQuery.of(context).size;
+      if(screenWidth<size.width){
+        screenWidth = size.width;
+      }
+      if(screenHeight<size.height){
+        screenHeight = size.height;
+      }
+    }
+    else{
+      screenWidth = MediaQuery.of(context).size.width;
+      screenHeight = MediaQuery.of(context).size.height;
+    }
     return Scaffold(
+      backgroundColor:  ColorConfig().employeeDetailScreenBackgroundColor,
       appBar: AppBarWithTitle(screenWidth: screenWidth, screenHeight: screenHeight, title: TextConfig().appBarEmployeeListScreenTitle, updateEmployee: false,getCallBackDeleteIconClick: (isClick){}),
       body: BlocBuilder<EmployeeListBloc,EmployeeListState>(builder: (context,state){
         if(state is EmployeeListLoading){
-          return Center(
-            child: CircularProgressIndicator(
-              color: ColorConfig().appBarBackgroundColor,
-            ),
+          return Container(
+              width: screenWidth,
+              height: (kIsWeb)?screenHeight:null,
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: ColorConfig().appBarBackgroundColor,
+                ),
+              )
           );
         }
         else if(state is EmployeeListLoaded){
@@ -98,15 +118,19 @@ class EmployeeListPage extends State<EmployeeListScreen> {
               getPreviousEmployeeList.add(getEmployee);
             }
           }
-          return employeeListUI(screenWidth: screenWidth, screenHeight: screenHeight, getCurrentEmployeeList: getCurrentEmployeeList, getPreviousEmployeeList: getPreviousEmployeeList, getCallBackSelectedEmployee: (getEmployee ) {
-            navigateToEmployeeDetailScreen(getEmployee);
-          }, getDismissedCallBack: (getEmployee ) {
-            deleteEmployee(getDeletedEmployee: getEmployee);
-          });
+          return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: employeeListUI(screenWidth: screenWidth, screenHeight: screenHeight, getCurrentEmployeeList: getCurrentEmployeeList, getPreviousEmployeeList: getPreviousEmployeeList, getCallBackSelectedEmployee: (getEmployee ) {
+                navigateToEmployeeDetailScreen(getEmployee);
+              }, getDismissedCallBack: (getEmployee ) {
+                deleteEmployee(getDeletedEmployee: getEmployee);
+              })
+          );
         }
         else if(state is EmployeeListError){
+          print("state : ${state.message}");
           return Container(
-            child: messageBoxWidget(screenWidth: screenWidth, screenHeight: screenHeight, getMessage: state.message, getActionText: "", getCallBackFunction: (isClick){}),
+            child: messageBoxWidget(screenWidth: screenWidth, screenHeight: screenHeight, getMessage: state.message??"", getActionText: "", getCallBackFunction: (isClick){}),
           );
         }
         else{
@@ -118,6 +142,7 @@ class EmployeeListPage extends State<EmployeeListScreen> {
           navigateToEmployeeDetailScreen(null);
         }
       },),
+
     );
   }
 }

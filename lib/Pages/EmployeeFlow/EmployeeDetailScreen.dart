@@ -17,6 +17,7 @@ import 'package:employee/ReusableComponent/BottomBar/bottomBar.dart';
 import 'package:employee/ReusableComponent/Image/svgImage.dart';
 import 'package:employee/ReusableComponent/WidgetUI/messageBoxWidget.dart';
 import 'package:employee/ReusableComponent/WidgetUI/textFieldWidget.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -79,9 +80,21 @@ class EmployeeDetailPage extends State<EmployeeDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    screenWidth = MediaQuery.of(context).size.width;
-    screenHeight = MediaQuery.of(context).size.height;
-    scaleFactor = MediaQuery.of(context).textScaleFactor;
+    if(kIsWeb){
+      Size size = MediaQuery.of(context).size;
+      if(screenWidth<size.width){
+        screenWidth = size.width;
+      }
+      if(screenHeight<size.height){
+        screenHeight = size.height;
+      }
+      scaleFactor = MediaQuery.of(context).textScaleFactor;
+    }
+    else{
+      screenWidth = MediaQuery.of(context).size.width;
+      screenHeight = MediaQuery.of(context).size.height;
+      scaleFactor = MediaQuery.of(context).textScaleFactor;
+    }
     return BlocBuilder<EmployeeBloc,EmployeeState>(builder: (BuildContext context, EmployeeState state) {
       if(state is EmployeeError){
         return Container(
@@ -110,77 +123,80 @@ class EmployeeDetailPage extends State<EmployeeDetailScreen> {
         }
         employeeEndDateController.text = (getEndDate!=null)?ValueConfig().checkTodayDate(getEndDate!)?TextConfig().todayText:ValueConfig().getConvertDateFormat(getEndDate!).replaceAll(",",""):"";
         return Scaffold(
+          backgroundColor:  ColorConfig().employeeDetailScreenBackgroundColor,
           appBar: AppBarWithTitle(screenWidth: screenWidth, screenHeight: screenHeight, title: getEmployee.employeeId==null?TextConfig().appBarEmployeeDetailScreenAddTitle:TextConfig().appBarEmployeeDetailScreenUpdateTitle, updateEmployee: getEmployee.employeeId==null?false:true, getCallBackDeleteIconClick: (isClick) {
             if(isClick){
               Navigator.pop(context,TextConfig().deletedData);
             }
           },),
-          body: Container(
-            width: screenWidth,
-            height: screenHeight,
-            color: ColorConfig().employeeDetailScreenBackgroundColor,
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(height: ValueConfig().getVerticalValueUsingHeight(screenHeight: screenHeight, getHeight:SizeConfig().employeeDetailScreenTopTextFieldPadding),),
-                  textFieldWidget(screenWidth: screenWidth, screenHeight: screenHeight, scaleFactor: scaleFactor, textFieldWidth: SizeConfig().textFieldEmployeeNameWidth, textFieldHeight: SizeConfig().textFieldEmployeeNameHeight, readOnly: false, textEditingController: employeeNameController, hintText: TextConfig().employeeDetailScreenEmployeeNameHint, getKeyboardType: TextInputType.name, prefixIconPath: AppConfig().employeeNameIcon, prefixIconWidth: SizeConfig().employeeNameIconWidth, prefixIconHeight: SizeConfig().employeeNameIconHeight, suffixIconPath: null, suffixIconWidth: null, suffixIconHeight: null, submitTextFunction: (getText){getEmployee.employeeName = getText;}),
-                  SizedBox(height: ValueConfig().getVerticalValueUsingHeight(screenHeight: screenHeight, getHeight:SizeConfig().employeeDetailScreenTopTextFieldPadding),),
-                  textFieldWidget(screenWidth: screenWidth, screenHeight: screenHeight, scaleFactor: scaleFactor, textFieldWidth: SizeConfig().textFieldEmployeeRoleWidth, textFieldHeight: SizeConfig().textFieldEmployeeRoleHeight, readOnly: true, textEditingController: employeeRoleController, hintText: TextConfig().employeeDetailScreenSelectRoleHint, getKeyboardType: TextInputType.name, prefixIconPath: AppConfig().employeeRoleIcon, prefixIconWidth: SizeConfig().employeeRoleIconWidth, prefixIconHeight: SizeConfig().employeeRoleIconHeight, suffixIconPath: AppConfig().dropDownIcon, suffixIconWidth: SizeConfig().dropDownIconWidth, suffixIconHeight: SizeConfig().dropDownIconHeight, submitTextFunction: (getText){
-                    if(getText == ""){
-                      bottomSheetWidget(context: context,screenWidth: screenWidth,screenHeight: screenHeight, getEmployeeRoleList: getEmployeeRoleList, getEmployeeRoleCallBack: (getEmployeeRole) {
-                        getEmployee.employeeRole = getEmployeeRole;
-                        employeeRoleController.text = getEmployeeRole;
-                        Navigator.pop(context);
-                      },);
-                    }
-                  }),
-                  SizedBox(height: ValueConfig().getVerticalValueUsingHeight(screenHeight: screenHeight, getHeight:SizeConfig().employeeDetailScreenTopTextFieldPadding),),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldHorizontalPadding)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        textFieldWidget(screenWidth: screenWidth, screenHeight: screenHeight, scaleFactor: scaleFactor, textFieldWidth: SizeConfig().textFieldEmployeeDateWidth, textFieldHeight: SizeConfig().textFieldEmployeeDateHeight, readOnly: true, textEditingController: employeeJoinDateController, hintText: TextConfig().employeeDetailScreenDateHintText, getKeyboardType: TextInputType.datetime, prefixIconPath: AppConfig().calenderIcon, prefixIconWidth: SizeConfig().calenderIconWidth, prefixIconHeight: SizeConfig().calenderIconHeight, suffixIconPath: null, suffixIconWidth: null, suffixIconHeight: null, submitTextFunction: (getText) async {
-                          calenderPopUpUI(context: context, screenWidth: screenWidth, screenHeight: screenHeight,screenScaleFactor: scaleFactor, selectedDate: getStartDate, employeeJoinedCalender:true ,getStartDate: DateTime(1900) ,activeTab: ValueConfig().checkTodayDate(getStartDate)?1:0,callBackSelectedDate: (getDate){
-                            getStartDate = getDate!;
-                            if(getEndDate!=null){
-                              if((getEndDate!.compareTo(getStartDate)<0)){
-                                getEndDate = null;
-                                employeeEndDateController.text = "";
-                                getEmployee.employeeEndDate = null;
+          body: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Container(
+              width: screenWidth,
+              color: ColorConfig().employeeDetailScreenBackgroundColor,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: ValueConfig().getVerticalValueUsingHeight(screenHeight: screenHeight, getHeight:SizeConfig().employeeDetailScreenTopTextFieldPadding),),
+                    textFieldWidget(screenWidth: screenWidth, screenHeight: screenHeight, scaleFactor: scaleFactor, textFieldWidth: (screenWidth-ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldEmployeeNameWidth))>40?(screenWidth-40):ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldEmployeeNameWidth), textFieldHeight: SizeConfig().textFieldEmployeeNameHeight, readOnly: false, textEditingController: employeeNameController, hintText: TextConfig().employeeDetailScreenEmployeeNameHint, getKeyboardType: TextInputType.name, prefixIconPath: AppConfig().employeeNameIcon, prefixIconWidth: SizeConfig().employeeNameIconWidth, prefixIconHeight: SizeConfig().employeeNameIconHeight, suffixIconPath: null, suffixIconWidth: null, suffixIconHeight: null, submitTextFunction: (getText){getEmployee.employeeName = getText;}),
+                    SizedBox(height: ValueConfig().getVerticalValueUsingHeight(screenHeight: screenHeight, getHeight:SizeConfig().employeeDetailScreenTopTextFieldPadding),),
+                    textFieldWidget(screenWidth: screenWidth, screenHeight: screenHeight, scaleFactor: scaleFactor, textFieldWidth: (screenWidth-ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldEmployeeRoleWidth))>40?(screenWidth-40):ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldEmployeeRoleWidth), textFieldHeight: SizeConfig().textFieldEmployeeRoleHeight, readOnly: true, textEditingController: employeeRoleController, hintText: TextConfig().employeeDetailScreenSelectRoleHint, getKeyboardType: TextInputType.name, prefixIconPath: AppConfig().employeeRoleIcon, prefixIconWidth: SizeConfig().employeeRoleIconWidth, prefixIconHeight: SizeConfig().employeeRoleIconHeight, suffixIconPath: AppConfig().dropDownIcon, suffixIconWidth: SizeConfig().dropDownIconWidth, suffixIconHeight: SizeConfig().dropDownIconHeight, submitTextFunction: (getText){
+                      if(getText == ""){
+                        bottomSheetWidget(context: context,screenWidth: screenWidth,screenHeight: screenHeight, getEmployeeRoleList: getEmployeeRoleList, getEmployeeRoleCallBack: (getEmployeeRole) {
+                          getEmployee.employeeRole = getEmployeeRole;
+                          employeeRoleController.text = getEmployeeRole;
+                          Navigator.pop(context);
+                        },);
+                      }
+                    }),
+                    SizedBox(height: ValueConfig().getVerticalValueUsingHeight(screenHeight: screenHeight, getHeight:SizeConfig().employeeDetailScreenTopTextFieldPadding),),
+                    Container(
+                      width: screenWidth,
+                      padding: EdgeInsets.symmetric(horizontal: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().employeeSectionHorizontalPadding)>20?20: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().employeeSectionHorizontalPadding)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          textFieldWidget(screenWidth: screenWidth, screenHeight: screenHeight, scaleFactor: scaleFactor, textFieldWidth: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldEmployeeDateWidth), textFieldHeight: SizeConfig().textFieldEmployeeDateHeight, readOnly: true, textEditingController: employeeJoinDateController, hintText: TextConfig().employeeDetailScreenDateHintText, getKeyboardType: TextInputType.datetime, prefixIconPath: AppConfig().calenderIcon, prefixIconWidth: SizeConfig().calenderIconWidth, prefixIconHeight: SizeConfig().calenderIconHeight, suffixIconPath: null, suffixIconWidth: null, suffixIconHeight: null, submitTextFunction: (getText) async {
+                            calenderPopUpUI(context: context, screenWidth: screenWidth, screenHeight: screenHeight,screenScaleFactor: scaleFactor, selectedDate: getStartDate, employeeJoinedCalender:true ,getStartDate: DateTime(1900) ,activeTab: ValueConfig().checkTodayDate(getStartDate)?1:0,callBackSelectedDate: (getDate){
+                              getStartDate = getDate!;
+                              if(getEndDate!=null){
+                                if((getEndDate!.compareTo(getStartDate)<0)){
+                                  getEndDate = null;
+                                  employeeEndDateController.text = "";
+                                  getEmployee.employeeEndDate = null;
+                                }
                               }
-                            }
-                            if(getStartDate!=null){
-                              employeeJoinDateController.text = ValueConfig().checkTodayDate(getStartDate)?TextConfig().todayText:ValueConfig().getConvertDateFormat(getStartDate).toString().replaceAll(",","");
-                            }
-                            else{
-                              employeeJoinDateController.text = "";
-                            }
-                            getEmployee.employeeJoinedDate = getStartDate;
-                          },);
-                        }),
-                        svgImage(imagePath: AppConfig().toArrowIcon, getBoxFit: BoxFit.scaleDown, svgImageWidth: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().toArrowIconWidth), svgImageHeight: ValueConfig().getVerticalValueUsingHeight(screenHeight: screenHeight, getHeight: SizeConfig().toArrowIconHeight)),
-                        textFieldWidget(screenWidth: screenWidth, screenHeight: screenHeight, scaleFactor: scaleFactor, textFieldWidth: SizeConfig().textFieldEmployeeDateWidth, textFieldHeight: SizeConfig().textFieldEmployeeDateHeight, readOnly: true, textEditingController: employeeEndDateController, hintText: TextConfig().employeeDetailScreenDateHintText, getKeyboardType: TextInputType.datetime, prefixIconPath: AppConfig().calenderIcon, prefixIconWidth: SizeConfig().calenderIconWidth, prefixIconHeight: SizeConfig().calenderIconHeight, suffixIconPath: null, suffixIconWidth: null, suffixIconHeight: null, submitTextFunction: (getText) async {
-                          calenderPopUpUI(context: context, screenWidth: screenWidth, screenHeight: screenHeight, screenScaleFactor: scaleFactor,selectedDate: getEndDate,employeeJoinedCalender:false ,getStartDate: getStartDate ,activeTab: getEndDate==null?2:ValueConfig().checkTodayDate(getEndDate!)?1:0,callBackSelectedDate: (getDate){
-                            getEndDate = getDate;
-                            if(getEndDate!=null){
-                              employeeEndDateController.text = ValueConfig().checkTodayDate(getEndDate!)?TextConfig().todayText:ValueConfig().getConvertDateFormat(getEndDate!).toString().replaceAll(",","");
-                            }
-                            else{
-                              employeeEndDateController.text = "";
-                            }
-                            getEmployee.employeeEndDate = getEndDate;
-                          });
-                        }),
-                      ],
+                              if(getStartDate!=null){
+                                employeeJoinDateController.text = ValueConfig().checkTodayDate(getStartDate)?TextConfig().todayText:ValueConfig().getConvertDateFormat(getStartDate).toString().replaceAll(",","");
+                              }
+                              else{
+                                employeeJoinDateController.text = "";
+                              }
+                              getEmployee.employeeJoinedDate = getStartDate;
+                            },);
+                          }),
+                          svgImage(imagePath: AppConfig().toArrowIcon, getBoxFit: BoxFit.scaleDown, svgImageWidth: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().toArrowIconWidth+(screenWidth<screenHeight?0:(SizeConfig().toArrowIconWidth*0.5))), svgImageHeight: ValueConfig().getVerticalValueUsingHeight(screenHeight: screenHeight, getHeight: SizeConfig().toArrowIconHeight+(screenWidth<screenHeight?0:(SizeConfig().toArrowIconHeight*0.5)))),
+                          textFieldWidget(screenWidth: screenWidth, screenHeight: screenHeight, scaleFactor: scaleFactor, textFieldWidth: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldEmployeeDateWidth), textFieldHeight: SizeConfig().textFieldEmployeeDateHeight, readOnly: true, textEditingController: employeeEndDateController, hintText: TextConfig().employeeDetailScreenDateHintText, getKeyboardType: TextInputType.datetime, prefixIconPath: AppConfig().calenderIcon, prefixIconWidth: SizeConfig().calenderIconWidth, prefixIconHeight: SizeConfig().calenderIconHeight, suffixIconPath: null, suffixIconWidth: null, suffixIconHeight: null, submitTextFunction: (getText) async {
+                            calenderPopUpUI(context: context, screenWidth: screenWidth, screenHeight: screenHeight, screenScaleFactor: scaleFactor,selectedDate: getEndDate,employeeJoinedCalender:false ,getStartDate: getStartDate ,activeTab: getEndDate==null?2:ValueConfig().checkTodayDate(getEndDate!)?1:0,callBackSelectedDate: (getDate){
+                              getEndDate = getDate;
+                              if(getEndDate!=null){
+                                employeeEndDateController.text = ValueConfig().checkTodayDate(getEndDate!)?TextConfig().todayText:ValueConfig().getConvertDateFormat(getEndDate!).toString().replaceAll(",","");
+                              }
+                              else{
+                                employeeEndDateController.text = "";
+                              }
+                              getEmployee.employeeEndDate = getEndDate;
+                            });
+                          }),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-
           ),
           bottomNavigationBar: Padding(
             padding: MediaQuery.of(context).viewInsets,
@@ -214,13 +230,13 @@ class EmployeeDetailPage extends State<EmployeeDetailScreen> {
       }
       else {
         return Container(
-          width: screenWidth,
-          height: screenHeight,
-          child: Center(
-            child: CircularProgressIndicator(
-              color: ColorConfig().appBarBackgroundColor,
-            ),
-          )
+            width: screenWidth,
+            height: screenHeight,
+            child: Center(
+              child: CircularProgressIndicator(
+                color: ColorConfig().appBarBackgroundColor,
+              ),
+            )
         );
       }
     },);

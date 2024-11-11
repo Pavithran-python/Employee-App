@@ -12,7 +12,7 @@ Widget calenderTopWidget({required double screenWidth,required double screenHeig
     width: screenWidth,
     decoration: BoxDecoration(
       color: ColorConfig().calenderTopWidgetBackgroundColor,
-      borderRadius: BorderRadius.only(topLeft: Radius.circular(ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().calenderPopUpBorderRadius)),topRight: Radius.circular(ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().calenderPopUpBorderRadius))),
+      borderRadius: BorderRadius.only(topLeft: Radius.circular(ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().calenderPopUpBorderRadius)>25?25:ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().calenderPopUpBorderRadius)),topRight: Radius.circular(ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().calenderPopUpBorderRadius)>25?25:ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().calenderPopUpBorderRadius))),
     ),
     child: Column(
       children: [
@@ -24,69 +24,87 @@ Widget calenderTopWidget({required double screenWidth,required double screenHeig
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  calenderTabButton(screenWidth: screenWidth, screenHeight: screenHeight, buttonWidth: SizeConfig().calenderTapButtonWidth, buttonHeight: SizeConfig().calenderTapButtonHeight, buttonRadius: SizeConfig().calenderTapButtonRadius, buttonText: TextConfig().tabButtonTodayText,activeTab:activeTab==1?true:false,buttonPressedFunction: (isClick){
-                    activeTab = 1;
-                    callBackActiveTab(activeTab);
-                    selectedDate = DateTime.now();
-                    callBackSelectedDate(selectedDate!);
-                  }),
-                  calenderTabButton(screenWidth: screenWidth, screenHeight: screenHeight, buttonWidth: SizeConfig().calenderTapButtonWidth, buttonHeight: SizeConfig().calenderTapButtonHeight, buttonRadius: SizeConfig().calenderTapButtonRadius, buttonText: TextConfig().tabButtonNextMondayText,activeTab:activeTab==2?true:false, buttonPressedFunction: (isClick){
-                    activeTab = 2;
-                    callBackActiveTab(activeTab);
-                    selectedDate = selectedDate!.add(Duration(days: ValueConfig().checkNextMondayCondition(getDateTime: selectedDate!)));
-                    callBackSelectedDate(selectedDate!);
-                  }),
-                ],
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    calenderTabButton(screenWidth: screenWidth, screenHeight: screenHeight, buttonWidth: SizeConfig().calenderTapButtonWidth, buttonHeight: SizeConfig().calenderTapButtonHeight, buttonRadius: SizeConfig().calenderTapButtonRadius, buttonText: TextConfig().tabButtonTodayText,activeTab:activeTab==1?true:false,buttonPressedFunction: (isClick){
+                      activeTab = 1;
+                      callBackActiveTab(activeTab);
+                      selectedDate = DateTime.now();
+                      callBackSelectedDate(selectedDate!);
+                    }),
+                    SizedBox(
+                      width: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().paddingBetweenCalenderText),
+                    ),
+                    calenderTabButton(screenWidth: screenWidth, screenHeight: screenHeight, buttonWidth: SizeConfig().calenderTapButtonWidth, buttonHeight: SizeConfig().calenderTapButtonHeight, buttonRadius: SizeConfig().calenderTapButtonRadius, buttonText: TextConfig().tabButtonNextMondayText,activeTab:activeTab==2?true:false, buttonPressedFunction: (isClick){
+                      activeTab = 2;
+                      callBackActiveTab(activeTab);
+                      selectedDate = selectedDate!.add(Duration(days: ValueConfig().checkNextMondayCondition(getDateTime: selectedDate!)));
+                      callBackSelectedDate(selectedDate!);
+                    }),
+                  ],
+                ),
               ),
             ),
             SizedBox(
               height: ValueConfig().getVerticalValueUsingHeight(screenHeight: screenHeight, getHeight: SizeConfig().calenderTabButtonBetweenPadding),
             ),
             Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  calenderTabButton(screenWidth: screenWidth, screenHeight: screenHeight,  buttonWidth: SizeConfig().calenderTapButtonWidth, buttonHeight: SizeConfig().calenderTapButtonHeight, buttonRadius: SizeConfig().calenderTapButtonRadius, buttonText: TextConfig().tabButtonNextTuesdayText,activeTab:activeTab==3?true:false, buttonPressedFunction: (isClick){
-                    activeTab = 3;
-                    callBackActiveTab(activeTab);
-                    selectedDate = selectedDate!.add(Duration(days: ValueConfig().checkNextTuesdayCondition(getDateTime: selectedDate!)));
-                    callBackSelectedDate(selectedDate!);
-                  }),
-                  calenderTabButton(screenWidth: screenWidth, screenHeight: screenHeight,  buttonWidth: SizeConfig().calenderTapButtonWidth, buttonHeight: SizeConfig().calenderTapButtonHeight, buttonRadius: SizeConfig().calenderTapButtonRadius, buttonText: TextConfig().tabButtonWeekText,activeTab:activeTab==4?true:false, buttonPressedFunction: (isClick){
-                    activeTab = 4;
-                    callBackActiveTab(activeTab);
-                    selectedDate = selectedDate!.add(Duration(days: 7));
-                    callBackSelectedDate(selectedDate!);
-                  }),
-                ],
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    calenderTabButton(screenWidth: screenWidth, screenHeight: screenHeight,  buttonWidth: SizeConfig().calenderTapButtonWidth, buttonHeight: SizeConfig().calenderTapButtonHeight, buttonRadius: SizeConfig().calenderTapButtonRadius, buttonText: TextConfig().tabButtonNextTuesdayText,activeTab:activeTab==3?true:false, buttonPressedFunction: (isClick){
+                      activeTab = 3;
+                      callBackActiveTab(activeTab);
+                      selectedDate = selectedDate!.add(Duration(days: ValueConfig().checkNextTuesdayCondition(getDateTime: selectedDate!)));
+                      callBackSelectedDate(selectedDate!);
+                    }),
+                    SizedBox(
+                      width: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().paddingBetweenCalenderText),
+                    ),
+                    calenderTabButton(screenWidth: screenWidth, screenHeight: screenHeight,  buttonWidth: SizeConfig().calenderTapButtonWidth, buttonHeight: SizeConfig().calenderTapButtonHeight, buttonRadius: SizeConfig().calenderTapButtonRadius, buttonText: TextConfig().tabButtonWeekText,activeTab:activeTab==4?true:false, buttonPressedFunction: (isClick){
+                      activeTab = 4;
+                      callBackActiveTab(activeTab);
+                      selectedDate = selectedDate!.add(Duration(days: 7));
+                      callBackSelectedDate(selectedDate!);
+                    }),
+                  ],
+                ),
               ),
             ),
           ],
         ),):Container(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              calenderTabButton(screenWidth: screenWidth, screenHeight: screenHeight, buttonWidth: SizeConfig().calenderTapButtonWidth, buttonHeight: SizeConfig().calenderTapButtonHeight, buttonRadius: SizeConfig().calenderTapButtonRadius, buttonText: TextConfig().tabButtonNoDateText, activeTab:activeTab==2?true:false,buttonPressedFunction: (isClick){
-                activeTab = 2;
-                callBackActiveTab(activeTab);
-                selectedDate = null;
-                callBackSelectedDate(selectedDate);
-              }),
-              calenderTabButton(screenWidth: screenWidth, screenHeight: screenHeight, buttonWidth: SizeConfig().calenderTapButtonWidth, buttonHeight: SizeConfig().calenderTapButtonHeight, buttonRadius: SizeConfig().calenderTapButtonRadius, buttonText: TextConfig().tabButtonTodayText,activeTab:activeTab==1?true:false ,buttonPressedFunction: (isClick){
-                activeTab = 1;
-                if(DateTime.now().compareTo(startDate)>0){
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                calenderTabButton(screenWidth: screenWidth, screenHeight: screenHeight, buttonWidth: SizeConfig().calenderTapButtonWidth, buttonHeight: SizeConfig().calenderTapButtonHeight, buttonRadius: SizeConfig().calenderTapButtonRadius, buttonText: TextConfig().tabButtonNoDateText, activeTab:activeTab==2?true:false,buttonPressedFunction: (isClick){
+                  activeTab = 2;
                   callBackActiveTab(activeTab);
-                  selectedDate = DateTime.now();
-                  callBackSelectedDate(selectedDate!);
-                }
-              }),
-            ],
+                  selectedDate = null;
+                  callBackSelectedDate(selectedDate);
+                }),
+                SizedBox(
+                  width: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().paddingBetweenCalenderText),
+                ),
+                calenderTabButton(screenWidth: screenWidth, screenHeight: screenHeight, buttonWidth: SizeConfig().calenderTapButtonWidth, buttonHeight: SizeConfig().calenderTapButtonHeight, buttonRadius: SizeConfig().calenderTapButtonRadius, buttonText: TextConfig().tabButtonTodayText,activeTab:activeTab==1?true:false ,buttonPressedFunction: (isClick){
+                  activeTab = 1;
+                  if(DateTime.now().compareTo(startDate)>0){
+                    callBackActiveTab(activeTab);
+                    selectedDate = DateTime.now();
+                    callBackSelectedDate(selectedDate!);
+                  }
+                }),
+              ],
+            ),
           ),
         ),
         SizedBox(

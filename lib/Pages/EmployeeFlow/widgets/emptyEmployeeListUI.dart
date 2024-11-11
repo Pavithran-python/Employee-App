@@ -10,7 +10,6 @@ import 'package:flutter/cupertino.dart';
 Widget emptyEmployeeListUI({required double screenWidth,required double screenHeight}){
   return Container(
     width: screenWidth,
-    height: screenHeight,
     color: ColorConfig().employeeListScreenBackgroundColor,
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,

@@ -23,7 +23,7 @@ calenderPopUpUI({required BuildContext context,required double screenWidth,requi
                   width: screenWidth- ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().calenderPopUpWidthPadding),
                   decoration: BoxDecoration(
                     color:ColorConfig().calenderPopUpBackgroundColor,
-                    borderRadius: BorderRadius.circular(ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().calenderPopUpBorderRadius)),
+                    borderRadius: BorderRadius.circular(ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().calenderPopUpBorderRadius)>25?25:ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().calenderPopUpBorderRadius)),
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,

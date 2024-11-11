@@ -19,6 +19,7 @@ class EmployeeListBloc extends Bloc<EmployeeListEvent, EmployeeListState> {
         emit(EmployeeListLoaded(employeeList: employeeList));
       }
       catch(e){
+        print("Error : ${e}");
         emit(EmployeeListError(message: e.toString()));
       }
     });

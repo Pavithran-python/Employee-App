@@ -1,10 +1,14 @@
 
+import 'dart:io';
+
 import 'package:employee/Config/AppConfig.dart';
 import 'package:employee/Config/TextConfig.dart';
 import 'package:employee/Config/ValueConfig.dart';
 import 'package:employee/Model/Employee.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 
 class ClientDatabase {
@@ -23,8 +27,12 @@ class ClientDatabase {
   Future<Database> get database async => _database ??= await createDatabase();
 
   Future<Database> createDatabase() async {
-    String databasesPath = await getDatabasesPath();
-    String dbPath = join(databasesPath, _databaseName);
+    // Using FFI for web
+    if (kIsWeb) {
+      databaseFactory = databaseFactoryFfiWeb;
+    } else {
+    }
+    String dbPath = join(await getDatabasesPath(), _databaseName);
     var database = await openDatabase(dbPath, version: 1, onCreate: _onCreate);
     return database;
   }
@@ -47,7 +55,6 @@ class ClientDatabase {
   Future<List<Map<String, dynamic>>> getAllEmployeeDB() async {
     Database db = await instance.database;
     return await db.rawQuery('SELECT * FROM $employeeTableName WHERE $employeeStatus = ${AppConfig().activeEmployeeStatus} ORDER BY $employeeId DESC');
-
   }
 
   Future<void> updateEmployee({required Employee getEmployee}) async{

@@ -9,8 +9,8 @@ import 'package:flutter/material.dart';
 
 Widget textFieldWidget({required double screenWidth,required double screenHeight,required double scaleFactor,required double textFieldWidth,required double textFieldHeight,required bool readOnly,required TextEditingController? textEditingController,required String hintText,required TextInputType? getKeyboardType,required String prefixIconPath,required double prefixIconWidth,required double prefixIconHeight,required String? suffixIconPath,required double? suffixIconWidth,required double? suffixIconHeight,required Function(String) submitTextFunction}){
   return Container(
-    width: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: textFieldWidth),
-    height: ValueConfig().getVerticalValueUsingHeight(screenHeight: screenHeight, getHeight: textFieldHeight),
+    width: textFieldWidth,
+    height: ValueConfig().getVerticalValueUsingHeight(screenHeight: screenHeight, getHeight: textFieldHeight+(screenWidth<screenHeight?0:(textFieldHeight*0.5))),
     child: TextFormField(
       readOnly: readOnly,
       controller: textEditingController,
@@ -20,37 +20,38 @@ Widget textFieldWidget({required double screenWidth,required double screenHeight
       cursorColor: ColorConfig().appBarBackgroundColor,
       keyboardType: getKeyboardType,
       onChanged: (getText){submitTextFunction(getText);},
-      style:TextStyle(fontSize: ValueConfig().getVerticalValueUsingHeight(screenHeight: screenHeight, getHeight: (SizeConfig().textFieldTextSize/scaleFactor)),color: ColorConfig().textFieldTextColor,fontFamily: AppConfig().robotoFontMedium),
+      style:TextStyle(fontSize: ValueConfig().getVerticalValueUsingHeight(screenHeight: screenHeight, getHeight: ((SizeConfig().textFieldTextSize+(screenWidth<screenHeight?0:(SizeConfig().textFieldTextSize*0.25)))/scaleFactor)),color: ColorConfig().textFieldTextColor,fontFamily: AppConfig().robotoFontMedium),
       onTap: (){
         if(readOnly){
           submitTextFunction("");
         }
       },
       decoration: InputDecoration(
+        isDense: false,
+        counterText: "",
         border: OutlineInputBorder(
-          borderSide: BorderSide(width: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldOuterBorderSize),color: ColorConfig().textFieldOuterBorderColor),
-          borderRadius: BorderRadius.all(Radius.circular(ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldOuterBorderRadius))),
+          borderSide: BorderSide(width: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldOuterBorderSize)>1.5?1.5:ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldOuterBorderSize),color: ColorConfig().textFieldOuterBorderColor),
+          borderRadius: BorderRadius.all(Radius.circular(ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldOuterBorderRadius)>10?10:ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldOuterBorderRadius))),
         ),
         disabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(width: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldOuterBorderSize),color: ColorConfig().textFieldOuterBorderColor),
-          borderRadius: BorderRadius.all(Radius.circular(ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldOuterBorderRadius))),
+          borderSide: BorderSide(width: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldOuterBorderSize)>1.5?1.5:ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldOuterBorderSize),color: ColorConfig().textFieldOuterBorderColor),
+          borderRadius: BorderRadius.all(Radius.circular(ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldOuterBorderRadius)>10?10:ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldOuterBorderRadius))),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(width: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldOuterBorderSize),color: ColorConfig().textFieldOuterBorderColor),
-          borderRadius: BorderRadius.all(Radius.circular(ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldOuterBorderRadius))),
+          borderSide: BorderSide(width: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldOuterBorderSize)>1.5?1.5:ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldOuterBorderSize),color: ColorConfig().textFieldOuterBorderColor),
+          borderRadius: BorderRadius.all(Radius.circular(ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldOuterBorderRadius)>10?10:ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldOuterBorderRadius))),
         ),
         focusedBorder: readOnly?OutlineInputBorder(
-          borderSide: BorderSide(width: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldOuterBorderSize),color: ColorConfig().textFieldOuterBorderColor),
-          borderRadius: BorderRadius.all(Radius.circular(ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldOuterBorderRadius))),
+          borderSide: BorderSide(width: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldOuterBorderSize)>1.5?1.5:ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldOuterBorderSize),color: ColorConfig().textFieldOuterBorderColor),
+          borderRadius: BorderRadius.all(Radius.circular(ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldOuterBorderRadius)>10?10:ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldOuterBorderRadius))),
         ):OutlineInputBorder(
-          borderSide: BorderSide(width: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldOuterBorderSize),color: ColorConfig().appBarBackgroundColor),
-          borderRadius: BorderRadius.all(Radius.circular(ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldOuterBorderRadius))),
+          borderSide: BorderSide(width: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldOuterBorderSize)>1.5?1.5:ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldOuterBorderSize),color: ColorConfig().appBarBackgroundColor),
+          borderRadius: BorderRadius.all(Radius.circular(ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldOuterBorderRadius)>10?10:ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldOuterBorderRadius))),
         ),
         //contentPadding: EdgeInsets.zero,
         contentPadding: EdgeInsets.symmetric(horizontal: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().textFieldHorizontalPadding)), // add padding to adjust text
-        isDense: true,
         hintText: hintText,
-        hintStyle: TextStyle(fontSize: ValueConfig().getVerticalValueUsingHeight(screenHeight: screenHeight, getHeight: (SizeConfig().textFieldHintTextSize/scaleFactor)),color: ColorConfig().textFieldTextHintColor,fontFamily: AppConfig().robotoFontMedium),
+        hintStyle: TextStyle(fontSize: ValueConfig().getVerticalValueUsingHeight(screenHeight: screenHeight, getHeight: ((SizeConfig().textFieldHintTextSize+(screenWidth<screenHeight?0:(SizeConfig().textFieldHintTextSize*0.25)))/scaleFactor)),color: ColorConfig().textFieldTextHintColor,fontFamily: AppConfig().robotoFontMedium),
         prefixIcon: Container(
           width: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: (SizeConfig().textFieldPrefixIconHorizontalPadding+SizeConfig().textFieldPrefixIconHorizontalPadding+prefixIconWidth)),
           height: ValueConfig().getVerticalValueUsingHeight(screenHeight: screenHeight, getHeight: textFieldHeight),
@@ -63,7 +64,7 @@ Widget textFieldWidget({required double screenWidth,required double screenHeight
           width: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: (SizeConfig().textFieldSuffixIconHorizontalPadding+SizeConfig().textFieldSuffixIconHorizontalPadding+suffixIconWidth!)),
           height: ValueConfig().getVerticalValueUsingHeight(screenHeight: screenHeight, getHeight: textFieldHeight),
           alignment: Alignment.center,
-          child: svgImage(imagePath: suffixIconPath, getBoxFit: BoxFit.scaleDown, svgImageWidth: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: suffixIconWidth), svgImageHeight: ValueConfig().getVerticalValueUsingHeight(screenHeight: screenHeight, getHeight: suffixIconHeight!)),
+          child: svgImage(imagePath: suffixIconPath, getBoxFit: BoxFit.scaleDown, svgImageWidth: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: suffixIconWidth+(screenWidth<screenHeight?0:(suffixIconWidth*0.5))), svgImageHeight: ValueConfig().getVerticalValueUsingHeight(screenHeight: screenHeight, getHeight: suffixIconHeight!+(screenWidth<screenHeight?0:(suffixIconHeight*0.5)))),
         ):null,
       ),
     ),

@@ -22,23 +22,29 @@ Widget calenderBottomWidget({required BuildContext context,required double scree
     padding: EdgeInsets.all(ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().calenderPopUpBorderRadius)),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              svgImage(imagePath: AppConfig().calenderIcon, getBoxFit: BoxFit.scaleDown, svgImageWidth:ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth:  SizeConfig().calenderIconWidth), svgImageHeight: ValueConfig().getVerticalValueUsingHeight(screenHeight: screenHeight, getHeight: SizeConfig().calenderIconHeight)),
-              SizedBox(
-                width: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().paddingBetweenCalenderText),
-              ),
-              textWidget(getText: selectedDate==null?TextConfig().tabButtonNoDateText:ValueConfig().checkTodayDate(selectedDate)?TextConfig().todayText:ValueConfig().getConvertDateFormat(selectedDate).toString().replaceAll(",", ""), screenHeight: screenHeight, textSize: SizeConfig().calenderNoDateTextSize, textColor: ColorConfig().calenderNoDateTextColor, getAlign: TextAlign.start, textStyle: AppConfig().robotoFontRegular, softWrap: true),
-            ],
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                svgImage(imagePath: AppConfig().calenderIcon, getBoxFit: BoxFit.scaleDown, svgImageWidth:ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth:  (SizeConfig().calenderIconWidth+(screenWidth<screenHeight?0:(SizeConfig().calenderIconWidth*0.5)))), svgImageHeight: ValueConfig().getVerticalValueUsingHeight(screenHeight: screenHeight, getHeight: SizeConfig().calenderIconHeight+(screenWidth<screenHeight?0:(SizeConfig().calenderIconHeight*0.5)))),
+                SizedBox(
+                  width: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().paddingBetweenCalenderText),
+                ),
+                textWidget(getText: selectedDate==null?TextConfig().tabButtonNoDateText:ValueConfig().checkTodayDate(selectedDate)?TextConfig().todayText:ValueConfig().getConvertDateFormat(selectedDate).toString().replaceAll(",", ""), screenHeight: screenHeight, textSize: SizeConfig().calenderNoDateTextSize+(screenWidth<screenHeight?0:(SizeConfig().calenderNoDateTextSize*0.5)), textColor: ColorConfig().calenderNoDateTextColor, getAlign: TextAlign.start, textStyle: AppConfig().robotoFontRegular, softWrap: true),
+              ],
+            ),
           ),
         ),
-        Container(
+        Flexible(child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
           child: Row(
+            mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -53,8 +59,8 @@ Widget calenderBottomWidget({required BuildContext context,required double scree
                 Navigator.pop(context);
               }),
             ],
+          ),),
           ),
-        ),
       ],
     ),
   );

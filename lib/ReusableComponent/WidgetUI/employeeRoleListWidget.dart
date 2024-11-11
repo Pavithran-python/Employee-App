@@ -15,7 +15,7 @@ Widget employeeRoleListWidget({required double screenWidth,required double scree
         Container(
           decoration: BoxDecoration(
             color: ColorConfig().employeeRoleListBackgroundColor,
-            borderRadius: getIndex==0?BorderRadius.only(topLeft: Radius.circular(ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().bottomSheetCornerRadius)),topRight: Radius.circular(ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().bottomSheetCornerRadius))):BorderRadius.zero,
+            borderRadius: getIndex==0?BorderRadius.only(topLeft: Radius.circular(ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().bottomSheetCornerRadius)>25?25:ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().bottomSheetCornerRadius)),topRight: Radius.circular(ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().bottomSheetCornerRadius)>25?25:ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().bottomSheetCornerRadius))):BorderRadius.zero,
           ),
           child: TextButton(
             onPressed: (){
@@ -29,15 +29,15 @@ Widget employeeRoleListWidget({required double screenWidth,required double scree
             ),
             child: Container(
               width: screenWidth,
-              height: ValueConfig().getVerticalValueUsingHeight(screenHeight: screenHeight, getHeight:SizeConfig().employeeRoleListviewHeight),
+              height: ValueConfig().getVerticalValueUsingHeight(screenHeight: screenHeight, getHeight:SizeConfig().employeeRoleListviewHeight+(screenWidth<screenHeight?0:(SizeConfig().employeeRoleListviewHeight*0.5))),
               alignment: Alignment.center,
-              child: textWidget(getText: employeeRole, screenHeight: screenHeight, textSize: SizeConfig().employeeRoleListviewTextSize, textColor: ColorConfig().employeeRoleListTextColor, getAlign: TextAlign.center, textStyle: AppConfig().robotoFontRegular, softWrap: true),
+              child: textWidget(getText: employeeRole, screenHeight: screenHeight, textSize: SizeConfig().employeeRoleListviewTextSize+(screenWidth<screenHeight?0:(SizeConfig().employeeRoleListviewTextSize*0.25)), textColor: ColorConfig().employeeRoleListTextColor, getAlign: TextAlign.center, textStyle: AppConfig().robotoFontRegular, softWrap: true),
             ),
           ),
         ),
         SizedBox(
           width: screenWidth,
-          height: ValueConfig().getVerticalValueUsingHeight(screenHeight: screenHeight, getHeight:SizeConfig().employeeRoleListviewGapPadding),
+          height: ValueConfig().getVerticalValueUsingHeight(screenHeight: screenHeight, getHeight:SizeConfig().employeeRoleListviewGapPadding+(screenWidth<screenHeight?0:(SizeConfig().employeeRoleListviewGapPadding*3))),
         ),
       ],
     ),

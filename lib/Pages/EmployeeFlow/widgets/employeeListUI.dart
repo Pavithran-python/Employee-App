@@ -60,8 +60,8 @@ Widget employeeListUI({required double screenWidth, required double screenHeight
           ),
           Container(
             width: screenWidth,
-            padding: EdgeInsets.symmetric(horizontal: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().employeeListScreenSwipeRightTextHorizontalPadding),vertical: ValueConfig().getVerticalValueUsingHeight(screenHeight: screenHeight, getHeight: SizeConfig().employeeListScreenSwipeRightTextVerticalPadding)),
-            child: textWidget(getText: TextConfig().employeeListScreenSwipeToDeleteText, screenHeight: screenHeight, textSize: SizeConfig().employeeListScreenSwipeRightTextSize, textColor: ColorConfig().employeeListScreenSwipeRightTextColor, getAlign: TextAlign.start, textStyle: AppConfig().robotoFontRegular, softWrap: true),
+            padding: EdgeInsets.symmetric(horizontal: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().employeeSectionHorizontalPadding)>20?20: ValueConfig().getHorizontalValueUsingWidth(screenWidth: screenWidth, getWidth: SizeConfig().employeeSectionHorizontalPadding),vertical: screenWidth>screenHeight?10:10),
+            child: textWidget(getText: TextConfig().employeeListScreenSwipeToDeleteText, screenHeight: screenHeight, textSize: SizeConfig().employeeListScreenSwipeRightTextSize+(screenWidth<screenHeight?0:(SizeConfig().employeeListScreenSwipeRightTextSize*0.25)), textColor: ColorConfig().employeeListScreenSwipeRightTextColor, getAlign: TextAlign.start, textStyle: AppConfig().robotoFontRegular, softWrap: true),
           ),
         ],
       ),
